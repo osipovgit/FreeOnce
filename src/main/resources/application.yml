@@ -1,0 +1,10 @@
+server:
+  port: PORT
+spring:
+  datasource:
+    url: jdbc:mysql://HOST:PORT/DATABASE_NAME?useUnicode=yes&characterEncoding=UTF-8
+    username: USERNAME
+    password: PASSWORD
+  jpa:
+    hibernate:
+      ddl-auto: update
