@@ -24,9 +24,10 @@ repositories {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+mainClassName = 'osipov.evgeny.Application'
 
 dependencies {
-    compile 'mysql:mysql-connector-java:8.0.17'
+    compile 'mysql:mysql-connector-java'
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile ("org.springframework:spring-beans")
