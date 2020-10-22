@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://HOST:PORT/DATABASE?useUnicode=yes&amp;characterEncoding=UTF-8</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="hibernate.connection.username">USER</property>
+        <property name="connection.password">PASSWORD</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="show_sql">true</property>
+
+        <mapping class="osipov.evgeny.entity.Freelancer"/>
+        <mapping class="osipov.evgeny.entity.Customer"/>
+        <mapping class="osipov.evgeny.entity.Order"/>
+    </session-factory>
+</hibernate-configuration>
