@@ -14,7 +14,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'application'
 
 bootJar {
-    baseName = 'cft'
+    baseName = 'freeonce'
     version =  '0.1'
 }
 
@@ -32,6 +32,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile ("org.springframework:spring-beans")
     compile ("org.hibernate:hibernate-core")
+    compile ("javax.xml.bind:jaxb-api")
+    compile('com.sun.activation:javax.activation')
+    compile('org.glassfish.jaxb:jaxb-runtime')
     compile group: 'log4j', name: 'log4j', version: '1.2.17'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
