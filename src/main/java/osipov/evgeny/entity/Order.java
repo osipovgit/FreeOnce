@@ -17,7 +17,7 @@ public class Order {
     @Getter
     private Long id;
     @Getter @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
     private Customer customer_id;
     @Getter @Setter
@@ -29,30 +29,31 @@ public class Order {
     @Getter @Setter
     private String description;
     @Getter @Setter
+    private String time;
+    @Getter @Setter
     private String price;
     @Getter @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
     private Freelancer freelancer_id;
 
     public Order(Customer customer_id, String status,
                  String category, String name,
-                 String description, String price,
-                 Freelancer freelancer_id) {
+                 String description, String time, String price) {
         this.customer_id = customer_id;
         this.status = status;
         this.category = category;
         this.name = name;
         this.description = description;
+        this.time = time;
         this.price = price;
-        this.freelancer_id = freelancer_id;
     }
-    public String toJSON () {
-        return "{\"customer id\":\"" + this.getCustomer_id()
+    public String toJSONWithoutBrace () {
+        return "\"customer id\":\"" + this.getCustomer_id()
                 + "\",\"status\":\"" + this.getStatus() + "\",\"category\":\""
                 + this.getCategory() + "\",\"name\":\""
-                + this.getName() + "\",\"description\":\"" + this.getDescription()
-                + "\",\"price\":\"" + this.getPrice() + "\",\"freelancer id\":\"" + this.getFreelancer_id()+ "\"}";
+                + this.getName() + "\",\"description\":\"" + this.getDescription() + "\",\"time\":\"" + this.getTime()
+                + "\",\"price\":\"" + this.getPrice() + "\",\"freelancer id\":\"" + this.getFreelancer_id()+ "\"";
     }
 
 }

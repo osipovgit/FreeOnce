@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
-    <title>Create new order!</title>
+    <title>Create new order</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function createOrder() {
+            if (document.getElementById("category").value === "") {
+                alert("Введите категорию задачи")
+            } else if (document.getElementById("name").value === "") {
+                alert("Введите описание")
+            } else if (document.getElementById("description").value === "") {
+                alert("Введите описание")
+            } else if (document.getElementById("time").value === "") {
+                alert("Введите время исполнения задачи")
+            } else if (document.getElementById("price").value === "") {
+                alert("Введите бюджет")
+            } else {
+                $.post(location.origin + '/get_id').then(function (customer_id) {
+                    $.get(location.href + '/creating?category=' + document.getElementById("category").value
+                        + '&name=' + document.getElementById("name").value
+                        + '&description=' + document.getElementById("description").value
+                        + '&time=' + document.getElementById("time").value
+                        + '&price=' + document.getElementById("price").value
+                        + '&customer_id=' + customer_id).then(function (data) {
+                        document.location = data
+                    });
+                })
+            }
+        }
+    </script>
 </head>
 <body>
-
+<h3>Заполните все поля и нажмите кнопку "Отправить"</h3>
+<h6>Может кто-нибудь да откликнется :)</h6>
+<div style="margin-top: 2vh; margin-right: 5vw">
+    <input type="text" class="form-control" placeholder="Категория задачи" id="category"
+           style="width: 37vw"><br>
+    <input type="text" class="form-control" placeholder="Название" id="name"
+           style="width: 37vw"><br>
+    <input type="text" class="form-control" placeholder="Описание задачи" id="description"
+           style="width: 37vw"><br>
+    <input type="text" class="form-control" placeholder="Срок исполнения" id="time"
+           style="width: 37vw"><br>
+    <input type="text" class="form-control" placeholder="Бюджет" id="price"
+           style="width: 37vw"><br>
+    <button class="btn btn-success" style="margin-right: 5vw" type="submit" onclick="createOrder()">
+        Создать задачу
+    </button>
+    <input type="button" class="btn btn-secondary" value="Вернуться в главное меню" onclick="document.location='/home'">
+</div>
 </body>
 </html>

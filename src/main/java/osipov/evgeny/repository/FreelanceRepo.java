@@ -19,6 +19,26 @@ public interface FreelanceRepo {
         }
     }
 
+    static void updateFreelancer(Freelancer freelancer) {
+        try (Session session = HibernateUtil.getSession()) {
+            session.beginTransaction();
+            session.update(freelancer);
+            session.getTransaction().commit();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    static void deleteFreelancer(Freelancer freelancer) {
+        try (Session session = HibernateUtil.getSession()) {
+            session.beginTransaction();
+            session.delete(freelancer);
+            session.getTransaction().commit();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+    }
+
     static Freelancer getFreelancerByIdOrEmptyEntity(Long resultingIdValue) {
         Freelancer freelancer = new Freelancer();
         try (Session session = HibernateUtil.getSession()) {

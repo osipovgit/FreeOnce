@@ -19,6 +19,26 @@ public interface CustomerRepo {
         }
     }
 
+    static void updateCustomer(Customer customer) {
+        try (Session session = HibernateUtil.getSession()) {
+            session.beginTransaction();
+            session.update(customer);
+            session.getTransaction().commit();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    static void deleteCustomer(Customer customer) {
+        try (Session session = HibernateUtil.getSession()) {
+            session.beginTransaction();
+            session.delete(customer);
+            session.getTransaction().commit();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+    }
+
     static Customer getCustomerByIdOrEmptyEntity(Long resultingIdValue) {
         Customer customer = new Customer();
         try (Session session = HibernateUtil.getSession()) {
