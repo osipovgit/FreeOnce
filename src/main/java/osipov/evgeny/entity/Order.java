@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +34,17 @@ public class Order {
     @OneToOne
     @JoinColumn(name = "id")
     private Freelancer freelancer_id;
+
+    public Order(Customer customer_id, String status,
+                 String category, String name,
+                 String description, String price,
+                 Freelancer freelancer_id) {
+        this.customer_id = customer_id;
+        this.status = status;
+        this.category = category;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.freelancer_id = freelancer_id;
+    }
 }

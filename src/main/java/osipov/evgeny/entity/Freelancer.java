@@ -21,6 +21,8 @@ public class Freelancer {
     @Getter @Setter
     private String username;
     @Getter @Setter
+    private String password;
+    @Getter @Setter
     private Long count_deals;
     @Getter @Setter
     private String description;
@@ -28,4 +30,16 @@ public class Freelancer {
     private String phone_number;
     @Getter @Setter
     private String email;
+
+    public Freelancer(String fio, String username, String password,
+                      Long count_deals, String description,
+                      String phone_number, String email) {
+        this.fio = fio;
+        this.username = username;
+        this.password = password;
+        this.count_deals = count_deals;
+        this.description = description;
+        this.phone_number = phone_number;
+        this.email = email;
+    }
 }

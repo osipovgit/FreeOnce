@@ -11,7 +11,7 @@ public class WebController {
 
     @RequestMapping("/")
     public String auth(Model model) {
-        return "auth";
+        return "authorization";
     }
 
     @RequestMapping("/registration")

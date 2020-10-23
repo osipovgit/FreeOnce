@@ -1,10 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title>Authorization</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function authorization() {
+            if (document.getElementById("fio").value === "") {
+                alert("Введите ФИО")
+            } else if (document.getElementById("username").value === "") {
+                alert("Введите имя пользователя")
+            } else if (document.getElementById("password").value === "") {
+                alert("Введите имя пароль")
+            } else if (document.getElementById("description").value === "") {
+                alert("Введите описание")
+            } else if (document.getElementById("phone").value === "") {
+                alert("Введите телефон")
+            } else if (document.getElementById("email").value === "") {
+                alert("Введите e-mail")
+            } else {
+                var a = ""
+                if (document.getElementsByName("contact")[0].checked === true) {
+                    a = "freelancer"
+                } else {
+                    a = "customer"
+                }
+                $.get(location.href + '/check/?fio=' + document.getElementById("fio").value
+                    + '&username=' + document.getElementById("username").value
+                    + '&password=' + document.getElementById("password").value
+                    + '&description=' + document.getElementById("description").value
+                    + '&phone=' + document.getElementById("phone").value
+                    + '&email=' + document.getElementById("email").value + '&role=' + a).then(function (data) {
+                    document.location = data
+                    if (data === "registration") {
+                        alert("Такое имя пользователя уже занято (или что-то пошло не так), попробуйте еще раз")
+                    }
+                });
+            }
+        }
+    </script>
 </head>
 <body>
-
+<h2>Добро пожаловать!</h2>
+<h3>Заполните все поля и нажмите кнопку "Отправить"</h3>
+<h6>Политика конфеденциальности отсутствует, пароли хранятся в явном виде, простите ¯\_(ツ)_/¯</h6>
+<div style="margin-top: 1vh">
+    <input type="text" class="form-control" placeholder="ФИО" id="fio"
+           style="width: 37vw"><br>
+    <input type="text" class="form-control" placeholder="Имя пользователя" id="username"
+           style="width: 37vw"><br>
+    <input type="text" class="form-control" placeholder="Пароль" id="password"
+           style="width: 37vw"><br>
+    <input type="text" class="form-control" placeholder="Описание" id="description"
+           style="width: 37vw"><br>
+    <input type="text" class="form-control" placeholder="Телефон" id="phone"
+           style="width: 37vw"><br>
+    <input type="text" class="form-control" placeholder="E-mail" id="email"
+           style="width: 37vw"><br>
+    <input type="radio" id="freelancer"
+           name="contact" value="freelancer" checked> Фрилансер<br>
+    <input type="radio" id="customer"
+           name="contact" value="customer"> Заказчик<br>
+    <button class="btn btn-success" style="margin-left: 1vh" type="submit" onclick="authorization()">
+        Отправить
+    </button>
+</div>
 </body>
 </html>
