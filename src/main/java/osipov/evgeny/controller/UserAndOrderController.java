@@ -87,4 +87,22 @@ public class UserAndOrderController {
     public String getRole(Model model, HttpServletRequest request) {
         return getRoleFromCookieOrReturnEmptyString(request);
     }
+
+    @PostMapping("/get_id")
+    public Long getId(Model model, HttpServletRequest request) {
+        return getIdFromCookieOrReturnMinusOne(request);
+    }
+
+    @GetMapping("/profile/{id}/get_profile_info")
+    public String getProfileInfoByIdOrEmptyString(Model model, HttpServletResponse response, @PathVariable Long id) {
+        if (FreelanceRepo.getFreelancerByIdOrEmptyEntity(id).getId() != null) {
+            Freelancer freelancer = FreelanceRepo.getFreelancerByIdOrEmptyEntity(id);
+            System.out.println(freelancer.toJSON());
+            return freelancer.toJSON();
+        } else if (CustomerRepo.getCustomerByIdOrEmptyEntity(id).getId() != null) {
+            Customer customer = CustomerRepo.getCustomerByIdOrEmptyEntity(id);
+            return customer.toJSON();
+        }
+        return "";
+    }
 }

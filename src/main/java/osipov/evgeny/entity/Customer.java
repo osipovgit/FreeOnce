@@ -42,4 +42,12 @@ public class Customer {
         this.phone_number = phone_number;
         this.email = email;
     }
+
+    public String toJSON () {
+        return "{\"fio\":\"" + this.getFio()
+                + "\",\"username\":\"" + this.getCustomer_name() + "\",\"count deals\":\""
+                + this.getCount_orders().toString() + "\",\"description\":\""
+                + this.getDescription() + "\",\"phone number\":\"" + this.getPhone_number()
+                + "\",\"email\":\"" + this.getEmail() + "\"}";
+    }
 }

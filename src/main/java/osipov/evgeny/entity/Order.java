@@ -47,4 +47,12 @@ public class Order {
         this.price = price;
         this.freelancer_id = freelancer_id;
     }
+    public String toJSON () {
+        return "{\"customer id\":\"" + this.getCustomer_id()
+                + "\",\"status\":\"" + this.getStatus() + "\",\"category\":\""
+                + this.getCategory() + "\",\"name\":\""
+                + this.getName() + "\",\"description\":\"" + this.getDescription()
+                + "\",\"price\":\"" + this.getPrice() + "\",\"freelancer id\":\"" + this.getFreelancer_id()+ "\"}";
+    }
+
 }

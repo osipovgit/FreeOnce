@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
@@ -7,12 +9,18 @@
     <script type="text/javascript">
         function buttonName() {
             $.post(location.origin + '/get_role').then(function (data) {
-                    console.log(data)
                     if (data === "customer") {
                         $('#find').remove();
                     } else if (data === "freelancer") {
                         $('#create').remove();
                     }
+                }
+            )
+        }
+
+        function myProfile() {
+            $.post(location.origin + '/get_id').then(function (data) {
+                    document.location='/profile/' + data;
                 }
             )
         }
@@ -23,13 +31,14 @@
     </script>
 </head>
 <body>
-<input type="button" class="btn btn-primary" value="Профиль" onclick="document.location='/profile'"><br>
-<input type="button" id="create" class="btn btn-primary" value="Разместить заказ"
+<br>
+<input type="button" class="btn btn-secondary" value="Профиль" onclick="myProfile()"><br><br>
+<input type="button" id="create" class="btn btn-secondary" value="Разместить заказ"
        onclick="document.location='/order/create'">
-<input type="button" id="find" class="btn btn-primary" value="Найти новый заказ"
+<input type="button" id="find" class="btn btn-secondary" value="Найти новый заказ"
        onclick="document.location='/order/create'">
-<br><input type="button" class="btn btn-primary" value="Активные заказы"
-           onclick="document.location='/order/active'"><br>
-<input type="button" class="btn btn-primary" value="История заказов" onclick="document.location='/order/history'"><br>
+<br><br><input type="button" class="btn btn-secondary" value="Активные заказы"
+           onclick="document.location='/order/active'"><br><br>
+<input type="button" class="btn btn-secondary" value="История заказов" onclick="document.location='/order/history'"><br>
 </body>
 </html>
