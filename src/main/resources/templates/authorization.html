@@ -1,10 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title>Authorization</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function authorization() {
+            if (document.getElementById("username").value === "") {
+                alert("Введите имя пользователя")
+            } else if (document.getElementById("password").value === "") {
+                alert("Введите имя пароль")
+            } else {
+                var role = ""
+                if (document.getElementsByName("contact")[0].checked === true) {
+                    role = "freelancer"
+                } else {
+                    role = "customer"
+                }
+                $.post(location.href + 'auth_check/?username=' + document.getElementById("username").value
+                    + '&password=' + document.getElementById("password").value + '&role=' + role).then(function (data) {
+                    if (data === "/") {
+                        alert("Неправильный логин или пароль (или что-то пошло не так), попробуйте еще раз")
+                    }
+                    document.location = data
+                });
+            }
+        }
+    </script>
 </head>
 <body>
-
+<h1>Добро пожаловать!</h1>
+<h2>FreeOnce - площадка, где одинокие работодатели и заказчики находит друг друга</h2>
+<h4>Введите имя пользователя и пароль и нажмите кнопку "Войти"</h4>
+<h6>Впервые здесь? Нажимте кнопку "Регистрация"</h6>
+<div style="margin-top: 2vh; margin-right: 5vw">
+    <input type="text" class="form-control" placeholder="Имя пользователя" id="username"
+           style="width: 37vw"><br>
+    <input type="password" class="form-control" placeholder="Пароль" id="password"
+           style="width: 37vw"><br>
+    <input type="radio" id="freelancer"
+           name="contact" value="freelancer" checked> Фрилансер<br>
+    <input type="radio" id="customer"
+           name="contact" value="customer"> Заказчик<br>
+    <button class="btn btn-success" style="margin-right: 5vw" type="submit" onclick="authorization()">
+        Войти
+    </button>
+    <input type="button" class="btn btn-primary" value="Регистрация" onclick="document.location='/registration'">
 </body>
 </html>

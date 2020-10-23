@@ -14,17 +14,22 @@ public class WebController {
         return "authorization";
     }
 
+    @RequestMapping("/home")
+    public String home(Model model) {
+        return "home";
+    }
+
     @RequestMapping("/registration")
     public String registration(Model model) {
         return "registration";
     }
 
-    @RequestMapping("/all_orders")
+    @RequestMapping("/order/history")
     public String allOrders(Model model) {
-        return "all_orders";
+        return "orders_history";
     }
 
-    @RequestMapping("/create_order")
+    @RequestMapping("/order/create")
     public String createOrder(Model model) {
         return "create_order";
     }
@@ -34,7 +39,12 @@ public class WebController {
         return "show_order";
     }
 
-    @RequestMapping("/show_profile")
+    @RequestMapping("/order/active")
+    public String activeOrder(Model model) {
+        return "active_order";
+    }
+
+    @RequestMapping("/profile")
     public String showProfile(Model model) {
         return "show_profile";
     }

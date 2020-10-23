@@ -4,10 +4,10 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
-    <title>Authorization</title>
+    <title>Registration</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script type="text/javascript">
-        function authorization() {
+        function registration() {
             if (document.getElementById("fio").value === "") {
                 alert("Введите ФИО")
             } else if (document.getElementById("username").value === "") {
@@ -21,18 +21,18 @@
             } else if (document.getElementById("email").value === "") {
                 alert("Введите e-mail")
             } else {
-                var a = ""
+                var role = ""
                 if (document.getElementsByName("contact")[0].checked === true) {
-                    a = "freelancer"
+                    role = "freelancer"
                 } else {
-                    a = "customer"
+                    role = "customer"
                 }
                 $.get(location.href + '/check/?fio=' + document.getElementById("fio").value
                     + '&username=' + document.getElementById("username").value
                     + '&password=' + document.getElementById("password").value
                     + '&description=' + document.getElementById("description").value
                     + '&phone=' + document.getElementById("phone").value
-                    + '&email=' + document.getElementById("email").value + '&role=' + a).then(function (data) {
+                    + '&email=' + document.getElementById("email").value + '&role=' + role).then(function (data) {
                     document.location = data
                     if (data === "registration") {
                         alert("Такое имя пользователя уже занято (или что-то пошло не так), попробуйте еще раз")
@@ -43,15 +43,14 @@
     </script>
 </head>
 <body>
-<h2>Добро пожаловать!</h2>
 <h3>Заполните все поля и нажмите кнопку "Отправить"</h3>
-<h6>Политика конфеденциальности отсутствует, пароли хранятся в явном виде, простите ¯\_(ツ)_/¯</h6>
-<div style="margin-top: 1vh">
+<h6>Политика конфиденциальности отсутствует, пароли хранятся в явном виде, простите ¯\_(ツ)_/¯</h6>
+<div style="margin-top: 2vh; margin-right: 5vw">
     <input type="text" class="form-control" placeholder="ФИО" id="fio"
            style="width: 37vw"><br>
     <input type="text" class="form-control" placeholder="Имя пользователя" id="username"
            style="width: 37vw"><br>
-    <input type="text" class="form-control" placeholder="Пароль" id="password"
+    <input type="password" class="form-control" placeholder="Пароль" id="password"
            style="width: 37vw"><br>
     <input type="text" class="form-control" placeholder="Описание" id="description"
            style="width: 37vw"><br>
@@ -63,9 +62,10 @@
            name="contact" value="freelancer" checked> Фрилансер<br>
     <input type="radio" id="customer"
            name="contact" value="customer"> Заказчик<br>
-    <button class="btn btn-success" style="margin-left: 1vh" type="submit" onclick="authorization()">
+    <button class="btn btn-success" style="margin-right: 5vw" type="submit" onclick="registration()">
         Отправить
     </button>
+    <input type="button" class="btn btn-primary" value="Авторизация" onclick="document.location='/'">
 </div>
 </body>
 </html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function buttonName() {
+            $.post(location.origin + '/get_role').then(function (data) {
+                    console.log(data)
+                    if (data === "customer") {
+                        $('#find').remove();
+                    } else if (data === "freelancer") {
+                        $('#create').remove();
+                    }
+                }
+            )
+        }
+
+        $(document).ready(function () {
+            buttonName()
+        })
+    </script>
+</head>
+<body>
+<input type="button" class="btn btn-primary" value="Профиль" onclick="document.location='/profile'"><br>
+<input type="button" id="create" class="btn btn-primary" value="Разместить заказ"
+       onclick="document.location='/order/create'">
+<input type="button" id="find" class="btn btn-primary" value="Найти новый заказ"
+       onclick="document.location='/order/create'">
+<br><input type="button" class="btn btn-primary" value="Активные заказы"
+           onclick="document.location='/order/active'"><br>
+<input type="button" class="btn btn-primary" value="История заказов" onclick="document.location='/order/history'"><br>
+</body>
+</html>
