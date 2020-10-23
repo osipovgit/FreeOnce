@@ -133,7 +133,7 @@ public class UserAndOrderController {
         String JSONKeyIdValueOther = "{";
         boolean skipFirstСomma = true;
         for (Order order : orders) {
-            if (!order.getStatus().equals("hidden")) {
+            if (!order.getStatus().equals("hidden") & !order.getStatus().equals("done")) {
                 if (skipFirstСomma) {
                     JSONKeyIdValueOther += order.toJSONLineKeyIdValueOtherPersonalView();
                     skipFirstСomma = false;
@@ -149,25 +149,125 @@ public class UserAndOrderController {
     @GetMapping("/order/free/get_active_orders")
     public String getAllOrdersOrEmptyString(Model model, HttpServletRequest request, HttpServletResponse response) {
         String role = getRoleFromCookieOrReturnEmptyString(request);
+        List<Order> orders = new ArrayList<>();
         if (role.equals("freelancer")) {
-            List<Order> orders = OrderRepo.getAllOrdersOrEmptyList();
-            String JSONKeyIdValueOther = "{";
-            boolean skipFirstСomma = true;
-            for (Order order : orders) {
-                System.out.println(1);
-                if (order.getStatus().equals("published")) {
-                    if (skipFirstСomma) {
-                        JSONKeyIdValueOther += order.toJSONLineKeyIdValueOtherForAllAccess();
-                        skipFirstСomma = false;
-                    } else {
-                        JSONKeyIdValueOther += "," + order.toJSONLineKeyIdValueOtherForAllAccess();
-                    }
+            orders = OrderRepo.getOrdersByFreelancerIdOrEmptyList(getIdFromCookieOrReturnMinusOne(request));
+        } else if (role.equals("customer")) {
+            orders = OrderRepo.getOrdersByCustomerIdOrEmptyList(getIdFromCookieOrReturnMinusOne(request));
+        } else return "/";
+        String JSONKeyIdValueOther = "{";
+        boolean skipFirstСomma = true;
+        for (Order order : orders) {
+            if (order.getStatus().equals("hidden") | order.getStatus().equals("done")) {
+                if (skipFirstСomma) {
+                    JSONKeyIdValueOther += order.toJSONLineKeyIdValueOtherForAllAccess();
+                    skipFirstСomma = false;
+                } else {
+                    JSONKeyIdValueOther += "," + order.toJSONLineKeyIdValueOtherForAllAccess();
                 }
             }
-            JSONKeyIdValueOther += "}";
-            System.out.println(JSONKeyIdValueOther);
-            return JSONKeyIdValueOther;
         }
+        JSONKeyIdValueOther += "}";
+        System.out.println(JSONKeyIdValueOther);
+        return JSONKeyIdValueOther;
+    }
+
+    @GetMapping("/order/history/get_finished_orders")
+    public String getFinishedOrHiddenOrdersOrEmptyString(Model model, HttpServletRequest request, HttpServletResponse response) {
+        String role = getRoleFromCookieOrReturnEmptyString(request);
+        List<Order> orders = new ArrayList<>();
+        if (role.equals("freelancer")) {
+            orders = OrderRepo.getOrdersByFreelancerIdOrEmptyList(getIdFromCookieOrReturnMinusOne(request));
+        } else if (role.equals("customer")) {
+            orders = OrderRepo.getOrdersByCustomerIdOrEmptyList(getIdFromCookieOrReturnMinusOne(request));
+        } else return "/";
+        String JSONKeyIdValueOther = "{";
+        boolean skipFirstСomma = true;
+        for (Order order : orders) {
+            if (order.getStatus().equals("done") || order.getStatus().equals("hidden")) {
+                if (skipFirstСomma) {
+                    JSONKeyIdValueOther += order.toJSONLineKeyIdValueOtherForAllAccess();
+                    skipFirstСomma = false;
+                } else {
+                    JSONKeyIdValueOther += "," + order.toJSONLineKeyIdValueOtherForAllAccess();
+                }
+            }
+        }
+        JSONKeyIdValueOther += "}";
+        System.out.println(JSONKeyIdValueOther);
+        return JSONKeyIdValueOther;
+    }
+
+    @GetMapping("/show_order/{order_id}/situation")
+    public String getAllOrdersOrEmptyString(Model model, HttpServletRequest request, HttpServletResponse response,
+                                            @PathVariable Long order_id) {
+        String role = getRoleFromCookieOrReturnEmptyString(request);
+        Long user_id = getIdFromCookieOrReturnMinusOne(request);
+        if (role.equals("freelancer")) {
+            Order order = OrderRepo.getOrderByIdOrEmptyEntity(order_id);
+            if (order != null) {
+                if (order.getFreelancer_id() == null) {
+                    return "freelancer_accept";
+                } else if (order.getFreelancer_id().equals(user_id)) {
+                    if (order.getStatus().equals("done")) {
+                        return "done";
+                    }
+                    return "freelancer_refuse";
+                }
+            } else return "/";
+        } else if (role.equals("customer")) {
+            Order order = OrderRepo.getOrderByIdOrEmptyEntity(order_id);
+            if (order != null)
+                if (order.getCustomer_id().equals(user_id))
+                    return order.getStatus();
+
+        }
+        return "/";
+    }
+
+    @GetMapping("/show_order/{order_id}/get_order_info")
+    public String getOrderJSONByOrderId(Model model, HttpServletResponse response, @PathVariable Long order_id) {
+        return OrderRepo.getOrderByIdOrEmptyEntity(order_id).toJSON();
+    }
+
+    @GetMapping("/show_order/{order_id}/button_click")
+    @ResponseBody
+    public String registration(Model model, HttpServletRequest request, HttpServletResponse response,
+                               @RequestParam String command, @PathVariable Long order_id) {
+        String role = getRoleFromCookieOrReturnEmptyString(request);
+        Long user_id = getIdFromCookieOrReturnMinusOne(request);
+        Order order = OrderRepo.getOrderByIdOrEmptyEntity(order_id);
+        if (command.equals("freelancer_accept") & role.equals("freelancer")) {
+            order.setFreelancer_id(user_id);
+            order.setStatus("in_progress");
+        } else if (command.equals("customer_delete") & role.equals("customer")) {
+            OrderRepo.deleteOrder(order);
+            return "/home";
+        } else if (command.equals("customer_hide") & role.equals("customer")) {
+            order.setStatus("hidden");
+        } else if (command.equals("make_visible") & role.equals("customer")) {
+            order.setStatus("published");
+        } else if (command.equals("freelancer_refuse") & role.equals("freelancer")) {
+            order.setFreelancer_id(null);
+            order.setStatus("published");
+        } else if (command.equals("customer_dismiss") & role.equals("customer")) {
+            order.setFreelancer_id(null);
+            order.setStatus("published");
+        } else if (command.equals("customer_done") & role.equals("customer")) {
+            order.setStatus("done");
+            Freelancer freelancer = FreelanceRepo.getFreelancerByIdOrEmptyEntity(order.getFreelancer_id());
+            freelancer.setCount_deals(freelancer.getCount_deals() + 1);
+            FreelanceRepo.updateFreelancer(freelancer);
+            Customer customer = CustomerRepo.getCustomerByIdOrEmptyEntity(user_id);
+            customer.setCount_orders(customer.getCount_orders() + 1);
+            CustomerRepo.updateCustomer(customer);
+        }
+        OrderRepo.updateOrder(order);
         return "/home";
     }
 }
+
+
+
+
+

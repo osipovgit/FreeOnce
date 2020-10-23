@@ -13,7 +13,7 @@
 
         function getOrdersInfo() {
             $.get(location.href + '/get_active_orders').then(function (ordersJSON) {
-                    if (ordersJSON !== "/") {
+                    if (ordersJSON !== "/" & ordersJSON !== "/home") {
                         $('#ordersList').empty();
                         var element = document.getElementById('ordersList');
                         var fragment = document.createDocumentFragment();

@@ -35,8 +35,8 @@ public class WebController {
         return "create_order";
     }
 
-    @RequestMapping("/show_order/{id}")
-    public String showOrder(Model model, @PathVariable String id) {
+    @RequestMapping("/show_order/{order_id}")
+    public String showOrder(Model model, @PathVariable String order_id) {
         return "show_order";
     }
 

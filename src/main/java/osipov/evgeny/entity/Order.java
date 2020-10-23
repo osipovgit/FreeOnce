@@ -44,12 +44,11 @@ public class Order {
         this.time = time;
         this.price = price;
     }
-    public String toJSONWithoutBrace () {
-        return "\"id\":\"" + this.getId() + "\",\"customer id\":\"" + this.getCustomer_id()
-                + "\",\"status\":\"" + this.getStatus() + "\",\"category\":\""
-                + this.getCategory() + "\",\"name\":\""
-                + this.getName() + "\",\"description\":\"" + this.getDescription() + "\",\"time\":\"" + this.getTime()
-                + "\",\"price\":\"" + this.getPrice() + "\",\"freelancer id\":\"" + this.getFreelancer_id()+ "\"";
+    public String toJSON () {
+        return "{\"status\":\"" + this.getStatus() + "\",\"category\":\""
+                + this.getCategory() + "\",\"name\":\"" + this.getName() + "\",\"description\":\""
+                + this.getDescription() + "\",\"time\":\"" + this.getTime()
+                + "\",\"price\":\"" + this.getPrice() + "\"}";
     }
 
     public String toJSONLineKeyIdValueOtherPersonalView () {

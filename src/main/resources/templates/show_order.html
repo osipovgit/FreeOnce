@@ -1,10 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
     <title>Show this order</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function buttonClicked(data) {
+            console.log(data)
+            console.log(data.id)
+            $.get(location.href + '/button_click?command=' + data.id).then(function (redirTo) {
+                location.href = redirTo
+            })
+        }
+
+        function getOrderInfo() {
+            $.get(location.href + '/get_order_info').then(function (data) {
+                    var element = document.getElementById('chat');
+                    var fragment = document.createDocumentFragment();
+                    var a = 0;
+                    var jsonParse = JSON.parse(data, function (key, value) {
+                        if (key !== "") {
+                            if (key === "status" && value === "hidden")
+                                a = 1;
+                            var messageElement = document.createElement('a');
+                            messageElement.textContent = key + " : " + value;
+                            fragment.appendChild(messageElement);
+                            var brb = document.createElement('br');
+                            fragment.appendChild(brb);
+                        }
+                    });
+                    element.appendChild(fragment);
+                    if (a === 0) {
+                        $('#make_visible').remove();
+                    }
+                }
+            )
+        }
+
+        function selectButton() {
+            $.get(location.href + '/situation').then(function (data) {
+                if (data[0] === "/") {
+                    document.location = data;
+                } else if (data === "freelancer_accept") {
+                    $('#customer_delete').remove();
+                    $('#customer_hide').remove();
+                    $('#freelancer_refuse').remove();
+                    $('#customer_dismiss').remove();
+                    $('#customer_done').remove();
+                } else if (data === "freelancer_refuse") {
+                    $('#customer_delete').remove();
+                    $('#customer_hide').remove();
+                    $('#freelancer_accept').remove();
+                    $('#customer_dismiss').remove();
+                    $('#customer_done').remove();
+                } else if (data === "published") {
+                    $('#freelancer_accept').remove();
+                    $('#freelancer_refuse').remove();
+                    $('#customer_dismiss').remove();
+                    $('#customer_done').remove();
+                } else if (data === "in_progress") {
+                    $('#freelancer_accept').remove();
+                    $('#freelancer_refuse').remove();
+                    $('#customer_hide').remove();
+                    $('#freelancer_refuse').remove();
+                } else if (data === "done" || data === "hidden") {
+                    $('#freelancer_accept').remove();
+                    $('#customer_delete').remove();
+                    $('#customer_hide').remove();
+                    $('#freelancer_refuse').remove();
+                    $('#customer_dismiss').remove();
+                    $('#customer_done').remove();
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            selectButton()
+            getOrderInfo()
+        })
+    </script>
 </head>
 <body>
-
+<div class="border border-danger" id="chat" style="overflow: auto; height: 50vh; width: 45vw"></div>
+<br><br>
+<input type="button" class="btn btn-secondary" value="Вернуться на главную"
+       onclick="document.location='/home'">
+<input type="button" id="make_visible" class="btn btn-secondary" value="Сделать видимой"
+       onclick="buttonClicked(this)">
+<input type="button" id="freelancer_accept" class="btn btn-secondary" value="Принять заказ"
+       onclick="buttonClicked(this)">
+<input type="button" id="customer_delete" class="btn btn-secondary" value="Отменить и удалить заказ"
+       onclick="buttonClicked(this)">
+<input type="button" id="customer_hide" class="btn btn-secondary" value="Отменить и скрыть заказ"
+       onclick="buttonClicked(this)">
+<input type="button" id="freelancer_refuse" class="btn btn-secondary" value="Отказаться от выполнения"
+       onclick="buttonClicked(this)">
+<input type="button" id="customer_dismiss" class="btn btn-secondary" value="Отказаться от услуг текущего фрилансера"
+       onclick="buttonClicked(this)">
+<input type="button" id="customer_done" class="btn btn-secondary" value="Подтвердить выполнение задачи"
+       onclick="buttonClicked(this)">
 </body>
 </html>
