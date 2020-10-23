@@ -12,6 +12,8 @@ import osipov.evgeny.repository.OrderRepo;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class UserAndOrderController {
@@ -35,7 +37,6 @@ public class UserAndOrderController {
                 role = cookie.getValue();
             }
         }
-        System.out.println(role);
         return role;
     }
 
@@ -94,8 +95,7 @@ public class UserAndOrderController {
         if (CustomerRepo.getCustomerByIdOrEmptyEntity(customer_id) == null | customer_id == -1) {
             return "/";
         }
-        OrderRepo.setOrder(new Order(CustomerRepo.getCustomerByIdOrEmptyEntity(customer_id), "published",
-                                     category, name, description, time, price));
+        OrderRepo.setOrder(new Order(customer_id, "published", category, name, description, time, price));
         return "/order/active";
     }
 
@@ -113,12 +113,61 @@ public class UserAndOrderController {
     public String getProfileInfoByIdOrEmptyString(Model model, HttpServletResponse response, @PathVariable Long id) {
         if (FreelanceRepo.getFreelancerByIdOrEmptyEntity(id) != null) {
             Freelancer freelancer = FreelanceRepo.getFreelancerByIdOrEmptyEntity(id);
-            System.out.println(freelancer.toJSON());
             return freelancer.toJSON();
         } else if (CustomerRepo.getCustomerByIdOrEmptyEntity(id) != null) {
             Customer customer = CustomerRepo.getCustomerByIdOrEmptyEntity(id);
             return customer.toJSON();
         }
         return "";
+    }
+
+    @GetMapping("/order/active/get_active_orders")
+    public String getActiveOrdersOrEmptyString(Model model, HttpServletRequest request, HttpServletResponse response) {
+        String role = getRoleFromCookieOrReturnEmptyString(request);
+        List<Order> orders = new ArrayList<>();
+        if (role.equals("freelancer")) {
+            orders = OrderRepo.getOrdersByFreelancerIdOrEmptyList(getIdFromCookieOrReturnMinusOne(request));
+        } else if (role.equals("customer")) {
+            orders = OrderRepo.getOrdersByCustomerIdOrEmptyList(getIdFromCookieOrReturnMinusOne(request));
+        } else return "/";
+        String JSONKeyIdValueOther = "{";
+        boolean skipFirstСomma = true;
+        for (Order order : orders) {
+            if (!order.getStatus().equals("hidden")) {
+                if (skipFirstСomma) {
+                    JSONKeyIdValueOther += order.toJSONLineKeyIdValueOtherPersonalView();
+                    skipFirstСomma = false;
+                } else {
+                    JSONKeyIdValueOther += "," + order.toJSONLineKeyIdValueOtherPersonalView();
+                }
+            }
+        }
+        JSONKeyIdValueOther += "}";
+        return JSONKeyIdValueOther;
+    }
+
+    @GetMapping("/order/free/get_active_orders")
+    public String getAllOrdersOrEmptyString(Model model, HttpServletRequest request, HttpServletResponse response) {
+        String role = getRoleFromCookieOrReturnEmptyString(request);
+        if (role.equals("freelancer")) {
+            List<Order> orders = OrderRepo.getAllOrdersOrEmptyList();
+            String JSONKeyIdValueOther = "{";
+            boolean skipFirstСomma = true;
+            for (Order order : orders) {
+                System.out.println(1);
+                if (order.getStatus().equals("published")) {
+                    if (skipFirstСomma) {
+                        JSONKeyIdValueOther += order.toJSONLineKeyIdValueOtherForAllAccess();
+                        skipFirstСomma = false;
+                    } else {
+                        JSONKeyIdValueOther += "," + order.toJSONLineKeyIdValueOtherForAllAccess();
+                    }
+                }
+            }
+            JSONKeyIdValueOther += "}";
+            System.out.println(JSONKeyIdValueOther);
+            return JSONKeyIdValueOther;
+        }
+        return "/home";
     }
 }

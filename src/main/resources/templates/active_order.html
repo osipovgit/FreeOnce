@@ -1,10 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
     <title>Active orders</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function clickOrder(data) {
+                document.location = location.origin + "/show_order/" + data.id;
+        }
+
+        function getOrdersInfo() {
+            $.get(location.href + '/get_active_orders').then(function (ordersJSON) {
+                    if (ordersJSON !== "/") {
+                        $('#ordersList').empty();
+                        var element = document.getElementById('ordersList');
+                        var fragment = document.createDocumentFragment();
+                        var setId;
+                        var objOrders = JSON.parse(ordersJSON, function (key, value) {
+                            if (key !== "") {
+                                var buttonElement = document.createElement('button');
+                                buttonElement.className = "btn btn-light";
+                                buttonElement.type = "submit";
+                                buttonElement.id = key.toString();
+                                buttonElement.onclick = function () {
+                                    clickOrder(this);
+                                };
+                                buttonElement.textContent = value;
+                                fragment.appendChild(buttonElement);
+                                var brb = document.createElement('br');
+                                fragment.appendChild(brb);
+                                var brbr = document.createElement('br');
+                                fragment.appendChild(brbr);
+                            }
+                        });
+
+                        element.appendChild(fragment);
+                    } else {
+                        document.location = ordersJSON
+                    }
+                }
+            )
+        }
+
+        function buttonName() {
+            $.post(location.origin + '/get_role').then(function (data) {
+                    if (data === "customer") {
+                        $('#find').remove();
+                    } else if (data === "freelancer") {
+                        $('#create').remove();
+                    }
+                }
+            )
+        }
+
+        $(document).ready(function () {
+            buttonName()
+            getOrdersInfo()
+        })
+    </script>
 </head>
 <body>
-
+<div class="border border-danger"
+     style="margin-top: 5vh; width: 70vw; height: 80vh; overflow: auto" id="ordersList"></div>
+<input type="button" class="btn btn-secondary" value="Вернуться на главную"
+       onclick="document.location='/home'">
+<input type="button" id="create" class="btn btn-secondary" value="Разместить заказ"
+       onclick="document.location='/order/create'">
 </body>
 </html>

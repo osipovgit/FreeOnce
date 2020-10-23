@@ -26,7 +26,7 @@ public class WebController {
     }
 
     @RequestMapping("/order/history")
-    public String allOrders(Model model) {
+    public String closedOrders(Model model) {
         return "orders_history";
     }
 
@@ -42,6 +42,11 @@ public class WebController {
 
     @RequestMapping("/order/active")
     public String activeOrder(Model model) {
+        return "active_order";
+    }
+
+    @RequestMapping("/order/free")
+    public String allOrders(Model model) {
         return "active_order";
     }
 
