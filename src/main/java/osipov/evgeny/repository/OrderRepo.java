@@ -52,8 +52,8 @@ public interface OrderRepo {
         return order;
     }
 
-    static List getOrdersByCustomerIdOrEmptyList(Long customerId) {
-        List orders = new ArrayList<>();
+    static List<Order> getOrdersByCustomerIdOrEmptyList(Long customerId) {
+        List<Order> orders = new ArrayList<>();
         try (Session session = HibernateUtil.getSession()) {
             session.beginTransaction();
             Query query = session.createQuery("FROM Order WHERE customer_id =: custId");
@@ -66,12 +66,25 @@ public interface OrderRepo {
         return orders;
     }
 
-    static List getOrdersByFreelancerIdOrEmptyList(Long freelancerId) {
-        List orders = new ArrayList<>();
+    static List<Order> getOrdersByFreelancerIdOrEmptyList(Long freelancerId) {
+        List<Order> orders = new ArrayList<>();
         try (Session session = HibernateUtil.getSession()) {
             session.beginTransaction();
             Query query = session.createQuery("FROM Order WHERE freelancer_id =: freeId");
             query.setParameter("freeId", freelancerId);
+            orders = query.getResultList();
+            session.getTransaction().commit();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+        return orders;
+    }
+
+    static List<Order> getAllOrdersOrEmptyList() {
+        List<Order> orders = new ArrayList<>();
+        try (Session session = HibernateUtil.getSession()) {
+            session.beginTransaction();
+            Query query = session.createQuery("FROM Order");
             orders = query.getResultList();
             session.getTransaction().commit();
         } catch (Throwable ex) {

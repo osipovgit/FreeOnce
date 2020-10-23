@@ -17,9 +17,7 @@ public class Order {
     @Getter
     private Long id;
     @Getter @Setter
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
-    private Customer customer_id;
+    private Long customer_id;
     @Getter @Setter
     private String status;
     @Getter @Setter
@@ -33,11 +31,9 @@ public class Order {
     @Getter @Setter
     private String price;
     @Getter @Setter
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
-    private Freelancer freelancer_id;
+    private Long freelancer_id;
 
-    public Order(Customer customer_id, String status,
+    public Order(Long customer_id, String status,
                  String category, String name,
                  String description, String time, String price) {
         this.customer_id = customer_id;
@@ -49,11 +45,23 @@ public class Order {
         this.price = price;
     }
     public String toJSONWithoutBrace () {
-        return "\"customer id\":\"" + this.getCustomer_id()
+        return "\"id\":\"" + this.getId() + "\",\"customer id\":\"" + this.getCustomer_id()
                 + "\",\"status\":\"" + this.getStatus() + "\",\"category\":\""
                 + this.getCategory() + "\",\"name\":\""
                 + this.getName() + "\",\"description\":\"" + this.getDescription() + "\",\"time\":\"" + this.getTime()
                 + "\",\"price\":\"" + this.getPrice() + "\",\"freelancer id\":\"" + this.getFreelancer_id()+ "\"";
     }
 
+    public String toJSONLineKeyIdValueOtherPersonalView () {
+        return "\"" + this.getId().toString() + "\":\"" + "status: " + this.getStatus() + " category: "
+                + this.getCategory() + " name: " + this.getName() + " description: " + this.getDescription()
+                + " time: " + this.getTime() + " price: " + this.getPrice()
+                + " freelancer id: " + this.getFreelancer_id() + "\"";
+    }
+
+    public String toJSONLineKeyIdValueOtherForAllAccess () {
+        return "\"" + this.getId().toString() + "\":\"" + " category: " + this.getCategory()
+                + " name: " + this.getName() + " description: " + this.getDescription()
+                + " time: " + this.getTime() + " price: " + this.getPrice() + "\"";
+    }
 }
