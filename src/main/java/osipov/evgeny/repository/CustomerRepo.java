@@ -7,8 +7,15 @@ import osipov.evgeny.util.HibernateUtil;
 
 import java.util.List;
 
+/**
+ * Интерфейс для обращения к базе данных. Реализует запросы к таблице "customer".
+ */
 public interface CustomerRepo {
-
+    /**
+     * Метод для сохранения объекта заказчика в базе данных.
+     *
+     * @param customer объект заказчика, передается с единственным незаполненным полем - id
+     */
     static void setCustomer(Customer customer) {
         try (Session session = HibernateUtil.getSession()) {
             session.beginTransaction();
@@ -19,6 +26,11 @@ public interface CustomerRepo {
         }
     }
 
+    /**
+     * Метод для обновления данных объекта заказчика в базе данных.
+     *
+     * @param customer объект заказчика
+     */
     static void updateCustomer(Customer customer) {
         try (Session session = HibernateUtil.getSession()) {
             session.beginTransaction();
@@ -29,6 +41,11 @@ public interface CustomerRepo {
         }
     }
 
+    /**
+     * Метод для удаления данных объекта заказчика в базе данных.
+     *
+     * @param customer объект заказчика
+     */
     static void deleteCustomer(Customer customer) {
         try (Session session = HibernateUtil.getSession()) {
             session.beginTransaction();
@@ -39,6 +56,12 @@ public interface CustomerRepo {
         }
     }
 
+    /**
+     * Метод для поиска объекта заказчика в базе данных по инентификатору [ id ].
+     * Возврашает найденный объект или объект с полями, равными null.
+     *
+     * @param resultingIdValue предаваемое значение идентификатора
+     */
     static Customer getCustomerByIdOrEmptyEntity(Long resultingIdValue) {
         Customer customer = new Customer();
         try (Session session = HibernateUtil.getSession()) {
@@ -51,6 +74,12 @@ public interface CustomerRepo {
         return customer;
     }
 
+    /**
+     * Метод для поиска объекта заказчика в базе данных по имени пользователя [ customer_name ].
+     * Возврашает найденный объект или объект с полями, равными null.
+     *
+     * @param customerName предаваемое значение имени пользователя
+     */
     static Customer getCustomerByCustomerNameOrEmptyEntity(String customerName) {
         Customer customer = new Customer();
         try (Session session = HibernateUtil.getSession()) {

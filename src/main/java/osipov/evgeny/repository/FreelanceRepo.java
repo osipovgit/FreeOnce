@@ -7,8 +7,15 @@ import osipov.evgeny.util.HibernateUtil;
 
 import java.util.List;
 
+/**
+ * Интерфейс для обращения к базе данных. Реализует запросы к таблице "freelancer".
+ */
 public interface FreelanceRepo {
-
+    /**
+     * Метод для сохранения объекта исполнителя в базе данных.
+     *
+     * @param freelancer объект исполнителя, передается с единственным незаполненным полем - id
+     */
     static void setFreelancer(Freelancer freelancer) {
         try (Session session = HibernateUtil.getSession()) {
             session.beginTransaction();
@@ -19,6 +26,11 @@ public interface FreelanceRepo {
         }
     }
 
+    /**
+     * Метод для обновления данных объекта исполнителя в базе данных.
+     *
+     * @param freelancer объект исполнителя
+     */
     static void updateFreelancer(Freelancer freelancer) {
         try (Session session = HibernateUtil.getSession()) {
             session.beginTransaction();
@@ -29,6 +41,11 @@ public interface FreelanceRepo {
         }
     }
 
+    /**
+     * Метод для удаления данных объекта исполнителя в базе данных.
+     *
+     * @param freelancer объект исполнителя
+     */
     static void deleteFreelancer(Freelancer freelancer) {
         try (Session session = HibernateUtil.getSession()) {
             session.beginTransaction();
@@ -39,6 +56,12 @@ public interface FreelanceRepo {
         }
     }
 
+    /**
+     * Метод для поиска объекта исполнителя в базе данных по инентификатору [ id ].
+     * Возврашает найденный объект или объект с полями, равными null.
+     *
+     * @param resultingIdValue предаваемое значение идентификатора
+     */
     static Freelancer getFreelancerByIdOrEmptyEntity(Long resultingIdValue) {
         Freelancer freelancer = new Freelancer();
         try (Session session = HibernateUtil.getSession()) {
@@ -51,6 +74,12 @@ public interface FreelanceRepo {
         return freelancer;
     }
 
+    /**
+     * Метод для поиска объекта исполнителя в базе данных по имени пользователя [ username ].
+     * Возврашает найденный объект или объект с полями, равными null.
+     *
+     * @param freelancerUsername предаваемое значение имени пользователя
+     */
     static Freelancer getFreelancerByUsernameOrEmptyEntity(String freelancerUsername) {
         Freelancer freelancer = new Freelancer();
         try (Session session = HibernateUtil.getSession()) {

@@ -7,30 +7,67 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * Класс представления пользователя - исполнителя.
+ */
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "freelancer")
 public class Freelancer {
+    /**
+     * Поле уникального идентификатора.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
-    @Getter @Setter
+    /**
+     * Поле фамилии, имени, отчества (опционально) исполнителя.
+     */
+    @Getter
+    @Setter
     private String fio;
-    @Getter @Setter
+    /**
+     * Поле имени пользователя (уникальное, ввиду реализации).
+     */
+    @Getter
+    @Setter
     private String username;
-    @Getter @Setter
+    /**
+     * Поле пароля.
+     */
+    @Getter
+    @Setter
     private String password;
-    @Getter @Setter
+    /**
+     * Поле количества завершенных заказов.
+     */
+    @Getter
+    @Setter
     private Long count_deals;
-    @Getter @Setter
+    /**
+     * Поле описания исполнителя (компании, которую он представляет).
+     */
+    @Getter
+    @Setter
     private String description;
-    @Getter @Setter
+    /**
+     * Поле контактного телефона.
+     */
+    @Getter
+    @Setter
     private String phone_number;
-    @Getter @Setter
+    /**
+     * Поле для почты.
+     */
+    @Getter
+    @Setter
     private String email;
 
+    /**
+     * Конструктор класса. Принимает все поля текущего класса, кроме id.
+     */
     public Freelancer(String fio, String username, String password,
                       Long count_deals, String description,
                       String phone_number, String email) {
@@ -43,7 +80,12 @@ public class Freelancer {
         this.email = email;
     }
 
-    public String toJSON () {
+    /**
+     * Метод, преобразующий поля класса в строку в виде JSON.
+     *
+     * @return объект в виде JSON
+     */
+    public String toJSON() {
         return "{\"fio\":\"" + this.getFio()
                 + "\",\"username\":\"" + this.getUsername() + "\",\"count deals\":\""
                 + this.getCount_deals().toString() + "\",\"description\":\""
